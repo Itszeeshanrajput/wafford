@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wafford Audit Report — {{ data.session.get('id', 'N/A') }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @top-center {
+                content: "Wafford WiFi Audit Report";
+                font-size: 8pt;
+                color: #888;
+            }
+            @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 8pt;
+                color: #888;
+            }
+        }
+
+        @page :first {
+            margin-top: 0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #1a1a2e;
+            line-height: 1.5;
+            font-size: 10pt;
+        }
+
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            page-break-after: always;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a2234 100%);
+            color: #e2e8f0;
+            margin: -2cm;
+            padding: 2cm;
+        }
+
+        .cover h1 {
+            font-size: 36pt;
+            color: #22d3ee;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5em;
+        }
+
+        .cover .tagline {
+            font-size: 12pt;
+            color: #94a3b8;
+            margin-bottom: 2em;
+        }
+
+        .cover .meta {
+            font-size: 10pt;
+            color: #64748b;
+            line-height: 2;
+        }
+
+        .section {
+            page-break-inside: avoid;
+            margin-bottom: 1.5em;
+        }
+
+        .section-title {
+            font-size: 14pt;
+            color: #0891b2;
+            border-bottom: 2px solid #22d3ee;
+            padding-bottom: 0.3em;
+            margin-bottom: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75em;
+            margin-bottom: 1em;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.75em;
+            text-align: center;
+            background: #f8fafc;
+        }
+
+        .stat-box .value {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #0891b2;
+            display: block;
+        }
+
+        .stat-box .label {
+            font-size: 7pt;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin-bottom: 1em;
+        }
+
+        th, td {
+            padding: 0.4em 0.6em;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #0891b2;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 7.5pt;
+            letter-spacing: 0.03em;
+        }
+
+        tr:nth-child(even) td { background: #f8fafc; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.1em 0.4em;
+            border-radius: 3px;
+            font-size: 7.5pt;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-danger  { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-info    { background: #dbeafe; color: #1e40af; }
+
+        .credential-block {
+            border: 1px solid #34d399;
+            border-radius: 4px;
+            padding: 0.6em 1em;
+            margin-bottom: 0.5em;
+            background: #f0fdf4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credential-block .ssid { font-weight: 600; }
+        .credential-block .pass {
+            font-family: 'Courier New', monospace;
+            color: #065f46;
+            font-weight: 700;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 1.5em;
+            color: #94a3b8;
+            font-style: italic;
+            font-size: 9pt;
+        }
+
+        .footer {
+            margin-top: 2em;
+            padding-top: 0.5em;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            font-size: 7pt;
+            color: #94a3b8;
+        }
+
+        .page-break { page-break-before: always; }
+
+        .bar-container {
+            margin: 0.5em 0;
+        }
+
+        .bar-row-pdf {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3em;
+            gap: 0.5em;
+        }
+
+        .bar-label-pdf {
+            width: 80px;
+            font-size: 8pt;
+            color: #64748b;
+            text-align: right;
+        }
+
+        .bar-track-pdf {
+            flex: 1;
+            background: #e2e8f0;
+            border-radius: 2px;
+            height: 14px;
+            overflow: hidden;
+        }
+
+        .bar-fill-pdf {
+            height: 100%;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            padding-left: 0.3em;
+            font-size: 7pt;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .bar-fill-pdf.success { background: #34d399; }
+        .bar-fill-pdf.danger  { background: #f87171; }
+    </style>
+</head>
+<body>
+    <div class="cover">
+        <h1>Wafford</h1>
+        <div class="tagline">WiFi Security Audit Report</div>
+        <div class="meta">
+            Session: {{ data.session.get('id', 'N/A') }}<br>
+            Date: {{ generated_at }}<br>
+            Duration: {{ duration_human }}<br>
+            Operator: {{ data.session.get('user', 'N/A') }}<br>
+            Host: {{ data.session.get('hostname', 'N/A') }}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Executive Summary</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="value">{{ stats.networks_discovered }}</span>
+                <span class="label">Networks</span>
+            </div>
+            <div class="stat-box">
+                <span class="value">{{ stats.total_attacks }}</span>
+                <span class="label">Attacks</span>
+            </div>
+            <div class="stat-box">
+                <span class="value">{{ stats.successful_attacks }}</span>
+                <span class="label">Successful</span>
+            </div>
+            <div class="stat-box">
+                <span class="value">{{ stats.failed_attacks }}</span>
+                <span class="label">Failed</span>
+            </div>
+            <div class="stat-box">
+                <span class="value">{{ stats.handshakes_captured }}</span>
+                <span class="label">Handshakes</span>
+            </div>
+            <div class="stat-box">
+                <span class="value">{{ stats.credentials_found }}</span>
+                <span class="label">Credentials</span>
+            </div>
+        </div>
+
+        {% if stats.total_attacks > 0 %}
+        <div class="bar-container">
+            <strong style="font-size: 9pt; color: #64748b;">Attack Success Rate</strong>
+            <div class="bar-row-pdf">
+                <span class="bar-label-pdf">Success</span>
+                <div class="bar-track-pdf">
+                    <div class="bar-fill-pdf success" style="width: {% if stats.total_attacks > 0 %}{{ (stats.successful_attacks / stats.total_attacks * 100) | round(1) }}%{% else %}0%{% endif %};">{{ stats.success_rate }}</div>
+                </div>
+            </div>
+            <div class="bar-row-pdf">
+                <span class="bar-label-pdf">Failed</span>
+                <div class="bar-track-pdf">
+                    <div class="bar-fill-pdf danger" style="width: {% if stats.total_attacks > 0 %}{{ (stats.failed_attacks / stats.total_attacks * 100) | round(1) }}%{% else %}0%{% endif %};"></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="section page-break">
+        <h2 class="section-title">Networks Discovered</h2>
+        {% if data.networks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ESSID</th>
+                    <th>BSSID</th>
+                    <th>CH</th>
+                    <th>Encryption</th>
+                    <th>Signal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for net in data.networks %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ net.essid or 'Hidden' }}</td>
+                    <td style="font-family: monospace; font-size: 8pt;">{{ net.bssid or 'N/A' }}</td>
+                    <td>{{ net.channel or '?' }}</td>
+                    <td>
+                        {% if net.encryption and 'WEP' in net.encryption %}
+                        <span class="badge badge-danger">{{ net.encryption }}</span>
+                        {% elif net.encryption and 'OPN' in net.encryption %}
+                        <span class="badge badge-danger">OPEN</span>
+                        {% else %}
+                        <span class="badge badge-info">{{ net.encryption or 'N/A' }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ net.signal or '?' }} dBm</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No networks discovered.</div>
+        {% endif %}
+    </div>
+
+    <div class="section page-break">
+        <h2 class="section-title">Attacks Performed</h2>
+        {% if data.attacks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Target</th>
+                    <th>Result</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atk in data.attacks %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ atk.type or 'N/A' }}</td>
+                    <td>{{ atk.target or 'N/A' }}</td>
+                    <td>
+                        {% if atk.success %}
+                        <span class="badge badge-success">PASS</span>
+                        {% else %}
+                        <span class="badge badge-danger">FAIL</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ '%.1f' | format(atk.duration|default(0)) }}s</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No attacks performed.</div>
+        {% endif %}
+    </div>
+
+    <div class="section page-break">
+        <h2 class="section-title">Credentials Captured</h2>
+        {% if data.credentials %}
+        {% for cred in data.credentials %}
+        <div class="credential-block">
+            <div>
+                <span class="ssid">{{ cred.essid or 'Unknown' }}</span>
+                <span style="color: #64748b; margin-left: 0.5em;">{{ cred.bssid or '' }}</span>
+            </div>
+            <span class="pass">{{ cred.password or '***' }}</span>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">No credentials captured.</div>
+        {% endif %}
+    </div>
+
+    <div class="section page-break">
+        <h2 class="section-title">Handshakes</h2>
+        {% if data.handshakes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ESSID</th>
+                    <th>BSSID</th>
+                    <th>File Path</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hs in data.handshakes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ hs.essid or 'Unknown' }}</td>
+                    <td style="font-family: monospace; font-size: 8pt;">{{ hs.bssid or 'N/A' }}</td>
+                    <td style="font-family: monospace; font-size: 8pt;">{{ hs.path or 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No handshakes captured.</div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        Wafford WiFi Auditing Framework v{{ data.session.get('tool_version', '1.0.0') }}<br>
+        This report is for authorized security testing only. Unauthorized network access is illegal.
+    </div>
+</body>
+</html>

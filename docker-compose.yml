@@ -1,0 +1,18 @@
+services:
+  wafford:
+    build: .
+    container_name: wafford
+    network_mode: host
+    privileged: true
+    volumes:
+      - /dev:/dev
+      - /sys/bus/usb:/sys/bus/usb
+      - wafford-data:/root/.wafford
+      - ./captures:/root/.wafford/captures
+    environment:
+      - WAFFORD_HOME=/root/.wafford
+    restart: unless-stopped
+
+volumes:
+  wafford-data:
+    driver: local

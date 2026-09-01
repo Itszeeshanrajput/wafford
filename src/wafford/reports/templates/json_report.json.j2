@@ -1,0 +1,68 @@
+{
+    "report": {
+        "format": "wafford/json/1.0",
+        "generated_at": "{{ generated_at }}",
+        "session": {
+            "id": "{{ data.session.get('id', '') }}",
+            "start_time": "{{ data.session.get('start_time', '') }}",
+            "hostname": "{{ data.session.get('hostname', '') }}",
+            "user": "{{ data.session.get('user', '') }}",
+            "tool_version": "{{ data.session.get('tool_version', '') }}"
+        }
+    },
+    "summary": {
+        "networks_discovered": {{ stats.networks_discovered | default(0) }},
+        "total_attacks": {{ stats.total_attacks | default(0) }},
+        "successful_attacks": {{ stats.successful_attacks | default(0) }},
+        "failed_attacks": {{ stats.failed_attacks | default(0) }},
+        "handshakes_captured": {{ stats.handshakes_captured | default(0) }},
+        "credentials_found": {{ stats.credentials_found | default(0) }},
+        "success_rate": "{{ stats.success_rate | default('N/A') }}",
+        "duration_seconds": {{ data.duration | default(0) }},
+        "duration_human": "{{ duration_human }}"
+    },
+    "networks": [
+        {% for net in data.networks %}
+        {
+            "essid": "{{ net.essid | default('') }}",
+            "bssid": "{{ net.bssid | default('') }}",
+            "channel": {{ net.channel | default(0) }},
+            "encryption": "{{ net.encryption | default('') }}",
+            "signal": {{ net.signal | default(0) }},
+            "clients": {{ net.clients | default([]) | length }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ],
+    "attacks": [
+        {% for atk in data.attacks %}
+        {
+            "type": "{{ atk.type | default('') }}",
+            "target": "{{ atk.target | default('') }}",
+            "success": {{ atk.success | default(false) | lower }},
+            "duration": {{ atk.duration | default(0) }},
+            "packets_sent": {{ atk.packets_sent | default(0) }},
+            "start_time": "{{ atk.start_time | default('') }}",
+            "end_time": "{{ atk.end_time | default('') }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ],
+    "handshakes": [
+        {% for hs in data.handshakes %}
+        {
+            "essid": "{{ hs.essid | default('') }}",
+            "bssid": "{{ hs.bssid | default('') }}",
+            "path": "{{ hs.path | default('') }}",
+            "size": "{{ hs.size | default('') }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ],
+    "credentials": [
+        {% for cred in data.credentials %}
+        {
+            "essid": "{{ cred.essid | default('') }}",
+            "bssid": "{{ cred.bssid | default('') }}",
+            "password": "{{ cred.password | default('') }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}

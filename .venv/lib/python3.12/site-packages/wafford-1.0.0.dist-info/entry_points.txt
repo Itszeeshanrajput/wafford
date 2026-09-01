@@ -1,0 +1,2 @@
+[console_scripts]
+wafford = wafford.__main__:main

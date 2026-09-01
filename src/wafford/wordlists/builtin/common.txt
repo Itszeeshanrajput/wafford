@@ -1,0 +1,92 @@
+password
+123456
+12345678
+qwerty
+abc123
+monkey
+1234567
+letmein
+trustno1
+dragon
+baseball
+iloveyou
+master
+sunshine
+ashley
+bailey
+passw0rd
+shadow
+123123
+654321
+superman
+qazwsx
+michael
+football
+password1
+password123
+admin
+welcome
+charlie
+donald
+batman
+passpass
+hello
+freedom
+whatever
+qwer1234
+loveme
+fuckyou
+1234
+12345
+123456789
+1234567890
+princess
+starwars
+solo
+pass
+passwd
+ qwerty123
+ jordan
+ jennifer
+ zxcvbn
+ amanda
+ summer
+ love
+ ashley
+ taylor
+ matrix
+ mustang
+ access
+ thunder
+ austin
+ thomas
+ hockey
+ robert
+ daniel
+ andrew
+ joshua
+ matthew
+ ginger
+ killer
+ george
+ michelle
+buster
+jessica
+pepper
+ranger
+hockey
+redwings
+samsung
+sparky
+andrea
+nicole
+jadore
+matrix
+god
+xxx
+test
+guest
+master
+pass
+love
+secret

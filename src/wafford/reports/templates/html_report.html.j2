@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wafford Audit Report — {{ data.session.get('id', 'N/A') }}</title>
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --border: #2d3a50;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --accent: #22d3ee;
+            --accent-dim: #0891b2;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --info: #60a5fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .meta-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-bar span { display: inline-flex; align-items: center; gap: 0.3rem; }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: var(--bg-secondary);
+            padding: 0.75rem 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-body { padding: 1.25rem; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover td { background: rgba(34, 211, 238, 0.03); }
+
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+        .badge-danger  { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+        .badge-warning { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .badge-info    { background: rgba(96, 165, 250, 0.15); color: var(--info); }
+
+        .bar-chart { margin-top: 0.5rem; }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.4rem;
+            gap: 0.5rem;
+        }
+
+        .bar-label {
+            width: 120px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .bar-track {
+            flex: 1;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            height: 22px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: width 0.3s;
+        }
+
+        .bar-fill.success { background: var(--success); color: #000; }
+        .bar-fill.danger  { background: var(--danger); color: #000; }
+        .bar-fill.info    { background: var(--info); color: #000; }
+
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 0.4rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: translateX(-3px);
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .timeline-event { font-size: 0.9rem; }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .credential-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--success);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credential-box .ssid { font-weight: 600; color: var(--text-primary); }
+        .credential-box .pass {
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0 1rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        @media print {
+            body { background: #fff; color: #111; padding: 1rem; }
+            .section { border-color: #ccc; }
+            .section-header { background: #f5f5f5; color: #0891b2; }
+            .stat-card { background: #f9f9f9; }
+            .bar-track { background: #eee; }
+            th { background: #f0f0f0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wafford Audit Report</h1>
+            <div class="subtitle">Professional WiFi Security Assessment</div>
+            <div class="meta-bar">
+                <span>Session: {{ data.session.get('id', 'N/A') }}</span>
+                <span>Generated: {{ generated_at }}</span>
+                <span>Duration: {{ duration_human }}</span>
+                {% if data.session.get('user') %}
+                <span>User: {{ data.session.user }}</span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="section">
+            <div class="section-header">&#x1F4CA; Executive Summary</div>
+            <div class="section-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="value">{{ stats.networks_discovered }}</span>
+                        <span class="label">Networks Discovered</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value">{{ stats.total_attacks }}</span>
+                        <span class="label">Attacks Performed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value">{{ stats.successful_attacks }}</span>
+                        <span class="label">Successful</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value">{{ stats.failed_attacks }}</span>
+                        <span class="label">Failed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value">{{ stats.handshakes_captured }}</span>
+                        <span class="label">Handshakes</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value">{{ stats.credentials_found }}</span>
+                        <span class="label">Credentials</span>
+                    </div>
+                </div>
+
+                {% if stats.total_attacks > 0 %}
+                <div class="bar-chart" style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;">Attack Results</h4>
+                    <div class="bar-row">
+                        <span class="bar-label">Success</span>
+                        <div class="bar-track">
+                            <div class="bar-fill success" style="width: {% if stats.total_attacks > 0 %}{{ (stats.successful_attacks / stats.total_attacks * 100) | round(1) }}%{% else %}0%{% endif %};">
+                                {{ stats.success_rate }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Failed</span>
+                        <div class="bar-track">
+                            <div class="bar-fill danger" style="width: {% if stats.total_attacks > 0 %}{{ (stats.failed_attacks / stats.total_attacks * 100) | round(1) }}%{% else %}0%{% endif %};">
+                                {% if stats.total_attacks > 0 %}{{ (stats.failed_attacks / stats.total_attacks * 100) | round(1) }}%{% else %}0%{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">&#x1F4F6; Networks Found</div>
+            <div class="section-body">
+                {% if data.networks %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ESSID</th>
+                            <th>BSSID</th>
+                            <th>Channel</th>
+                            <th>Encryption</th>
+                            <th>Signal</th>
+                            <th>Clients</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for net in data.networks %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ net.essid or 'Hidden' }}</strong></td>
+                            <td style="font-family: monospace;">{{ net.bssid or 'N/A' }}</td>
+                            <td>{{ net.channel or '?' }}</td>
+                            <td>
+                                {% if net.encryption and 'WPA3' in net.encryption %}
+                                <span class="badge badge-info">{{ net.encryption }}</span>
+                                {% elif net.encryption and 'WPA2' in net.encryption %}
+                                <span class="badge badge-warning">{{ net.encryption }}</span>
+                                {% elif net.encryption and 'WEP' in net.encryption %}
+                                <span class="badge badge-danger">{{ net.encryption }}</span>
+                                {% elif net.encryption and 'OPN' in net.encryption %}
+                                <span class="badge badge-danger">OPEN</span>
+                                {% else %}
+                                <span class="badge badge-info">{{ net.encryption or 'N/A' }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ net.signal or '?' }} dBm</td>
+                            <td>{{ net.clients|length if net.clients is defined else 0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">No networks discovered during this session.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">&#x2694; Attacks Performed</div>
+            <div class="section-body">
+                {% if data.attacks %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Target</th>
+                            <th>Status</th>
+                            <th>Duration</th>
+                            <th>Packets</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for atk in data.attacks %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><span class="badge badge-info">{{ atk.type or 'N/A' }}</span></td>
+                            <td>{{ atk.target or 'N/A' }}</td>
+                            <td>
+                                {% if atk.success %}
+                                <span class="badge badge-success">Success</span>
+                                {% else %}
+                                <span class="badge badge-danger">Failed</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ '%.1f' | format(atk.duration|default(0)) }}s</td>
+                            <td>{{ atk.packets_sent|default(0) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">No attacks performed during this session.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">&#x1F511; Credentials Captured</div>
+            <div class="section-body">
+                {% if data.credentials %}
+                {% for cred in data.credentials %}
+                <div class="credential-box">
+                    <div>
+                        <span class="ssid">{{ cred.essid or 'Unknown' }}</span>
+                        <span style="color: var(--text-secondary); margin-left: 0.5rem;">{{ cred.bssid or '' }}</span>
+                    </div>
+                    <div>
+                        <span class="pass">{{ cred.password or '***' }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state">No credentials captured during this session.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">&#x1F4E6; Handshakes Captured</div>
+            <div class="section-body">
+                {% if data.handshakes %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ESSID</th>
+                            <th>BSSID</th>
+                            <th>File</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hs in data.handshakes %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ hs.essid or 'Unknown' }}</strong></td>
+                            <td style="font-family: monospace;">{{ hs.bssid or 'N/A' }}</td>
+                            <td style="font-family: monospace;">{{ hs.path or 'N/A' }}</td>
+                            <td>{{ hs.size|default('N/A') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">No handshakes captured during this session.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">&#x23F1; Timeline</div>
+            <div class="section-body">
+                <div class="timeline">
+                    {% if data.attacks %}
+                    {% for atk in data.attacks %}
+                    <div class="timeline-item">
+                        <div class="timeline-time">{{ atk.start_time|default('N/A') }}</div>
+                        <div class="timeline-event">
+                            {{ atk.type|capitalize }} attack on
+                            <strong>{{ atk.target or 'N/A' }}</strong> —
+                            {% if atk.success %}
+                            <span class="badge badge-success">Success</span>
+                            {% else %}
+                            <span class="badge badge-danger">Failed</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="empty-state">No events in timeline.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if data.summary %}
+        <div class="section">
+            <div class="section-header">&#x1F4DD; Notes</div>
+            <div class="section-body">
+                <p style="color: var(--text-secondary);">{{ data.summary }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <footer>
+            Generated by <strong>Wafford</strong> WiFi Auditing Framework v{{ data.session.get('tool_version', '1.0.0') }}
+            <br>Unauthorized access to computer networks is illegal. This report is for authorized security testing only.
+        </footer>
+    </div>
+</body>
+</html>
