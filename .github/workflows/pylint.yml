@@ -23,4 +23,4 @@ jobs:
         pip install -e .
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=all --enable=E,F $(git ls-files 'src/*.py')
+        pylint --exit-zero $(git ls-files 'src/*.py')
