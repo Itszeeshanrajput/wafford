@@ -576,9 +576,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## 🎓 Learn More
 
-- 📺 **Video Tutorials** — [Wafford on YouTube](https://youtube.com/wafford)
-- 📚 **Blog Posts** — [Security Research with Wafford](https://blog.wafford.io)
-- 💬 **Community Chat** — [Wafford Discord Server](https://discord.gg/wafford)
 - 🐛 **Issue Tracker** — [GitHub Issues](https://github.com/Itszeeshanrajput/wafford/issues)
 
 ---
@@ -665,18 +662,6 @@ Wafford is proudly featured in:
 - [Aircrack-ng](https://www.aircrack-ng.org/) — WiFi security suite
 - [Scapy](https://scapy.net/) — Packet manipulation
 - Open-source security community ❤️
-
----
-
-## 📱 Social & Community
-
-Stay connected:
-
-- 🐦 **Twitter/X**: [@WaffordTools](https://twitter.com/wafford)
-- 💬 **Discord**: [Join Community](https://discord.gg/wafford)
-- 📖 **Reddit**: [r/WaffordTools](https://reddit.com/r/waffordtools)
-- 📺 **YouTube**: [Subscribe](https://youtube.com/wafford)
-- 📧 **Newsletter**: [Sign Up](https://wafford.io/newsletter)
 
 ---
 
