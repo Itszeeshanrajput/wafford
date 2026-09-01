@@ -15,12 +15,12 @@ from textual.widgets import Button, DataTable, Header, Input, ProgressBar, Selec
 
 from wafford.core.scanner import NetworkScanner, ScanResult
 from wafford.tools.detector import ToolDetector
-from wafford.ui.app import WaffordApp
 from wafford.ui.widgets.spectrum_graph import SpectrumGraph
 from wafford.ui.widgets.status_bar import StatusBar
 
 if TYPE_CHECKING:
     from textual.app import ComposeResult
+    from wafford.ui.app import WaffordApp
 
 
 class ScanMenu(Screen[None]):

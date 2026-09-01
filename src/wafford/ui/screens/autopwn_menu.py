@@ -69,6 +69,7 @@ class AutoPWNMenu(Screen[None]):
         with Vertical(id="autopwn-container"):
             with Vertical(id="autopwn-header-box"):
                 Static("🤖 Auto-PWN Autonomous Audit Pipeline", classes="menu-title")
+                yield ModeGuard(required="monitor", id="autopwn-mode-guard")
                 with Horizontal(id="autopwn-controls"):
                     yield Button("Start Auto-PWN", id="btn-autopwn-start", variant="success")
                     yield Button("Stop", id="btn-autopwn-stop", variant="error", disabled=True)

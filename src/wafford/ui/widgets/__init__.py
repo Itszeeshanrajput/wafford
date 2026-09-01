@@ -1,3 +1,4 @@
+from wafford.ui.widgets.mode_guard import ModeGuard
 from wafford.ui.widgets.network_card import NetworkCard
 from wafford.ui.widgets.progress import WaffordProgressBar
 from wafford.ui.widgets.scan_results import ScanResults
@@ -8,6 +9,7 @@ from wafford.ui.widgets.toast import ToastBridge, ToastWidget, get_toast_bridge
 from wafford.ui.widgets.tooltip import TooltipWidget, make_tooltip
 
 __all__ = [
+    "ModeGuard",
     "WaffordProgressBar",
     "StyledDataTable",
     "ToastWidget",
