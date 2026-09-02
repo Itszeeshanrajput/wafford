@@ -570,18 +570,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 3. **Open a New Issue** — Include logs and steps to reproduce
 4. **Join Community** — Ask questions on Discord or GitHub Discussions
 
-### **Report Security Issues**
-
-🔒 **Do NOT open public issues for security vulnerabilities.**
-
-Instead, email: **security@wafford.io** with:
-- Vulnerability description
-- Affected version(s)
-- Steps to reproduce
-- Proposed fix (optional)
-
----
-
 ## 📄 License
 
 Wafford is released under the **GNU General Public License v3.0 or later** — see [LICENSE](LICENSE) for details.
