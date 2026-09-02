@@ -107,24 +107,24 @@ Wafford's TUI is built on **Textual**, providing a responsive, beautiful interfa
 
 ```
 ╔════════════════════════════════════════════════════════════════╗
-║  🛡️ Wafford v1.0.0 — WiFi Auditing Framework                  ║
+║  🛡️ Wafford v1.0.0 — WiFi Auditing Framework                   ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                                                                ║
-║  📋 Available Options:                                        ║
-║  ────────────────────────────────────────────────────────    ║
-║  [S]can Networks          Discover WiFi networks             ║
-║  [A]ttack Target          Launch targeted attacks            ║
-║  [C]rack Password         Brute-force WPA/WEP               ║
-║  [R]eports                View & generate audit reports      ║
-║  [S]ettings               Configure Wafford                 ║
-║  [P]lugins                Manage custom plugins             ║
-║  [D]atabase               Manage audit history              ║
-║  [Q]uit                   Exit application                  ║
+║  📋 Available Options:                                         ║
+║  ────────────────────────────────────────────────────────      ║
+║  [S]can Networks          Discover WiFi networks               ║
+║  [A]ttack Target          Launch targeted attacks              ║
+║  [C]rack Password         Brute-force WPA/WEP                  ║
+║  [R]eports                View & generate audit reports        ║
+║  [S]ettings               Configure Wafford                    ║
+║  [P]lugins                Manage custom plugins                ║
+║  [D]atabase               Manage audit history                 ║
+║  [Q]uit                   Exit application                     ║
 ║                                                                ║
-║  Press [?] for help • Use arrow keys to navigate            ║
-║  Press [Q] to quit                                           ║
+║  Press [?] for help • Use arrow keys to navigate               ║
+║  Press [Q] to quit                                             ║
 ║                                                                ║
-╚════���═══════════════════════════════════════════════════════════╝
+╚════���═════════════════════════════════════════════════════════╝
 ```
 
 ### **Color-Coded Output**
