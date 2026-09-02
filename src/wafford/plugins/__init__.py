@@ -12,14 +12,12 @@ from wafford.plugins.api import (
     register_network_field,
     register_screen,
 )
-from wafford.plugins.loader import PluginLoader
-from wafford.plugins.registry import PluginRegistry
+from wafford.plugins.loader import PluginRegistry
 from wafford.plugins.sandbox import PluginSandbox
 
 __all__ = [
     "PluginBase",
     "PluginContext",
-    "PluginLoader",
     "PluginRegistry",
     "PluginSandbox",
     "register_attack",
