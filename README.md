@@ -555,25 +555,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
-## 📊 Project Statistics
-
-```
-┌─────────────────────────────────────┐
-│  Wafford Framework Statistics       │
-├─────────────────────────────────────┤
-│  Language:    Python 3.12+          │
-│  License:     GPL-3.0-or-later      │
-│  Code Lines:  ~10,000+              │
-│  Test Coverage: 85%+                │
-│  Commits:     250+                  │
-│  Contributors: 15+                  │
-│  Downloads:   5,000+/month          │
-│  Stars:       ⭐⭐⭐⭐⭐ (500+)        │
-└─────────────────────────────────────┘
-```
-
----
-
 ## 🎓 Learn More
 
 - 🐛 **Issue Tracker** — [GitHub Issues](https://github.com/Itszeeshanrajput/wafford/issues)
