@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
 requires-python = ">=3.12"
 authors = [
-    {name = "Wafford Team", email = "dev@wafford.io"},
+    {name = "Zeeshan Rajput", email = "itszeeshanrajput@gmail.com"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -56,9 +56,9 @@ docs = [
 wafford = "wafford.__main__:main"
 
 [project.urls]
-Homepage = "https://wafford.io"
-Repository = "https://github.com/wafford/wafford"
-Issues = "https://github.com/wafford/wafford/issues"
+Homepage = "https://github.com/Itszeeshanrajput/wafford"
+Repository = "https://github.com/Itszeeshanrajput/wafford"
+Issues = "https://github.com/Itszeeshanrajput/wafford/issues"
 Documentation = "https://docs.wafford.io"
 
 [tool.setuptools.packages.find]
